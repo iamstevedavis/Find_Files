@@ -30,4 +30,4 @@
 
 #Additional Visual Studio objects
 *.sdf
-bin
+ipch/
