@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 		{
 			GetDirectory(buffer);
 			RemoveEOL(buffer);
-			validatorInt = ValidateDirectory(buffer);
+			validatorInt = ChangeDirectoryContext(buffer);
 			if(0 != validatorInt)
 			{
 				printf("Could not find the directory specified.\n");
@@ -42,7 +42,7 @@ int FindFiles(file *first, file *last)
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
 
-	hFind = FindFirstFile((LPCWSTR)"\\*", &FindFileData);
+	hFind = FindFirstFile("\\*", &FindFileData);
 
 	if (INVALID_HANDLE_VALUE == hFind) 
 	{
@@ -69,9 +69,9 @@ int InsertIntoList(char *fileName, file *first, file *last)
 	file *previousFile = NULL;
 	file *nextFile = NULL;
 
-	newFile->next = newFile->prev = NULL;
-
 	newFile = (file *)malloc(sizeof(file));
+
+	newFile->next = newFile->prev = NULL;
 
 	if(NULL == newFile)
 	{
@@ -82,7 +82,8 @@ int InsertIntoList(char *fileName, file *first, file *last)
 
 	if(NULL == first)
 	{
-		first = last = newFile;
+		first = newFile;
+		last = newFile;
 		return 0;
 	}
 	else
@@ -122,7 +123,7 @@ void RemoveEOL(char *buffer)
 	}
 }
 
-int ValidateDirectory (const char *directory)
+int ChangeDirectoryContext (const char *directory)
 {
 	return _chdir(directory);
 }
