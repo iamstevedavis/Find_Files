@@ -5,8 +5,8 @@ int main(int argc, char *argv[])
 	char buffer[MAX_BUFFER_SIZE];
 	int validatorInt = 0;
 
-	file *first = NULL;
-	file *last = NULL;
+	file *head = NULL;
+	file *tail = NULL;
 
 	while(1)
 	{
@@ -22,11 +22,11 @@ int main(int argc, char *argv[])
 		}
 		while (0 != validatorInt);
 		printf("Directory \"%s\" found.\n", buffer);
-		FindFiles(first, last);
+		FindFiles(head, tail);
 	}
 }
 
-void PrintList(file *first, file *last)
+void PrintList(file *head, file *tail)
 {
 	do
 	{
@@ -35,7 +35,7 @@ void PrintList(file *first, file *last)
 	while(1);
 }
 
-int FindFiles(file *first, file *last)
+int FindFiles(file *head, file *tail)
 {
 	int validatorInt = 0;
 
@@ -52,7 +52,7 @@ int FindFiles(file *first, file *last)
 
 	do
 	{
-		validatorInt = InsertIntoList((char *)FindFileData.cFileName, first, last);
+		validatorInt = InsertIntoList((char *)FindFileData.cFileName, head, tail);
 		if(0 != validatorInt)
 		{
 			printf("Could not store file in memory.");
@@ -60,10 +60,13 @@ int FindFiles(file *first, file *last)
 		}
 	}
 	while (0 != FindNextFile(hFind, &FindFileData));
+
 	return 0;
 }
 
-int InsertIntoList(char *fileName, file *first, file *last)
+#pragma warning( push )
+#pragma warning( disable : 4133 )
+int InsertIntoList(char *fileName, file *head, file *tail)
 {
 	file *newFile = NULL;
 	file *previousFile = NULL;
@@ -80,15 +83,15 @@ int InsertIntoList(char *fileName, file *first, file *last)
 
 	strcpy(newFile->fileName, fileName);
 
-	if(NULL == first)
+	if(NULL == head)
 	{
-		first = newFile;
-		last = newFile;
+		head = newFile;
+		tail = newFile;
 		return 0;
 	}
 	else
 	{
-		previousFile = first;
+		previousFile = head;
 		nextFile = previousFile->next;
 		while(NULL != nextFile)
 		{
@@ -98,14 +101,16 @@ int InsertIntoList(char *fileName, file *first, file *last)
 
 		if(NULL == nextFile)
 		{
-			last = newFile;
+			tail = newFile;
 			newFile->next = NULL;
 			previousFile->next = newFile;
 			newFile->prev = previousFile;
 		}
 	}
+
 	return 0;
 }
+#pragma warning( pop ) 
 
 void GetDirectory(char *buffer)
 {
