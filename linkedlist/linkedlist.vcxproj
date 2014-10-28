@@ -77,7 +77,10 @@
     <ClInclude Include="header.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="file_functions.c" />
+    <ClCompile Include="linkedlist_functions.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="utilities.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
