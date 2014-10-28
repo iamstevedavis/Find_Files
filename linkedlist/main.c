@@ -22,17 +22,36 @@ int main(int argc, char *argv[])
 		}
 		while (0 != validatorInt);
 		printf("Directory \"%s\" found.\n", buffer);
-		FindFiles(head, tail);
+		FindFiles(&head, &tail);
+		PrintList(&head, &tail);
 	}
 }
 
-void PrintList(file *head, file *tail)
+void PrintList(file **head, file **tail)
 {
-	do
-	{
+	file *previousFile = NULL;
+	file *nextFile = NULL;
 
+	previousFile = *head;
+	nextFile = previousFile->next;
+
+	if(NULL == *head)
+	{
+		printf("Empty List!\n");
+		return;
 	}
-	while(1);
+
+	while(NULL != nextFile)
+	{
+		printf("%s\n", previousFile->fileName);
+		previousFile = nextFile;
+		nextFile = nextFile->next;
+	}
+
+	if(NULL == nextFile)
+	{
+		return;
+	}
 }
 
 int FindFiles(file **head, file **tail)
@@ -42,7 +61,7 @@ int FindFiles(file **head, file **tail)
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
 
-	hFind = FindFirstFile("\\*", &FindFileData);
+	hFind = FindFirstFile("*", &FindFileData);
 
 	if (INVALID_HANDLE_VALUE == hFind) 
 	{
@@ -83,7 +102,7 @@ int InsertIntoList(char *fileName, file **head, file **tail)
 
 	strcpy_s(newFile->fileName, MAX_BUFFER_SIZE, fileName);
 
-	if(NULL == head)
+	if(NULL == *head)
 	{
 		*head = newFile;
 		*tail = newFile;
@@ -93,6 +112,7 @@ int InsertIntoList(char *fileName, file **head, file **tail)
 	{
 		previousFile = *head;
 		nextFile = previousFile->next;
+
 		while(NULL != nextFile)
 		{
 			previousFile = nextFile;
@@ -101,7 +121,7 @@ int InsertIntoList(char *fileName, file **head, file **tail)
 
 		if(NULL == nextFile)
 		{
-			tail = newFile;
+			*tail = newFile;
 			newFile->next = NULL;
 			previousFile->next = newFile;
 			newFile->prev = previousFile;
