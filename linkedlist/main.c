@@ -35,7 +35,7 @@ void PrintList(file *head, file *tail)
 	while(1);
 }
 
-int FindFiles(file *head, file *tail)
+int FindFiles(file **head, file **tail)
 {
 	int validatorInt = 0;
 
@@ -66,7 +66,7 @@ int FindFiles(file *head, file *tail)
 
 #pragma warning( push )
 #pragma warning( disable : 4133 )
-int InsertIntoList(char *fileName, file *head, file *tail)
+int InsertIntoList(char *fileName, file **head, file **tail)
 {
 	file *newFile = NULL;
 	file *previousFile = NULL;
@@ -81,17 +81,17 @@ int InsertIntoList(char *fileName, file *head, file *tail)
 		return -1;
 	}
 
-	strcpy(newFile->fileName, fileName);
+	strcpy_s(newFile->fileName, MAX_BUFFER_SIZE, fileName);
 
 	if(NULL == head)
 	{
-		head = newFile;
-		tail = newFile;
+		*head = newFile;
+		*tail = newFile;
 		return 0;
 	}
 	else
 	{
-		previousFile = head;
+		previousFile = *head;
 		nextFile = previousFile->next;
 		while(NULL != nextFile)
 		{

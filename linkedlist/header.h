@@ -16,5 +16,5 @@ typedef struct _file
 void GetDirectory(char *buffer);
 void RemoveEOL(char *buffer);
 int ChangeDirectoryContext (const char *directory);
-int FindFiles(file *first, file *last);
-int InsertIntoList(char *fileName, file *first, file *last);
+int FindFiles(file **first, file **last);
+int InsertIntoList(char *fileName, file **head, file **tail);
