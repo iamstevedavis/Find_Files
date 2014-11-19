@@ -16,20 +16,31 @@
 /**
  * Definition for linked list elements
  */
-typedef struct _file
+typedef struct _llelement
 {
-	char fileName[MAX_BUFFER_SIZE];
-	struct file *prev;
-	struct file *next;
+	void * data;
+	struct llelement *prev;
+	struct llelement *next;
 };
-typedef struct _file file;
+typedef struct _llelement llelement;
+
+/**
+ * Definition for hold file data
+ */
+typedef struct _fileData
+{
+	char *name;
+};
+typedef struct _fileData fileData;
 
 /* File Functions */
-int FindFiles(file **first, file **last);
+int FindFiles(llelement **first, llelement **last);
 
 /* Linked List Functions */
-int InsertIntoList(const char *fileName, file **head, file **tail);
-void PrintList(file **head, file **tail);
+llelement *AllocateSpace(int data);
+void *GetDataAddress(void *p);
+int InsertIntoList(llelement *toInsert, llelement **head, llelement **tail);
+void PrintList(llelement **head, llelement **tail);
 
 /* Utility Functions */
 void GetDirectory(char *buffer);

@@ -1,43 +1,72 @@
 #include "header.h"
 
 /**
- *	Inserts a file struct into the linked list.
+ *	Allocates memory equal to your data size + a llelement
  *
  *	Parameters
- *		const char *fileName
- *			A char array that contains the filename we want to insert
- *		file **head
+ *		int data
+ *			An integer representing how many bytes of data you need
+ *
+ *	Returns
+ *		llelement * that represents the start of the block of memory of llelement + your data space
+ */
+llelement *AllocateSpace(int data)
+{
+	llelement *tmp = NULL;
+	tmp = (llelement*)malloc(sizeof(llelement) + data);
+	return tmp;
+}
+
+/**
+ *	Returns the address at which you can start writing data.
+ *
+ *	Parameters
+ *		void *p
+ *			The address that represents the start of the memory block containing an llelement
+ *
+ *	Returns
+ *		void * that is the location you can start writing data to
+ */
+void *GetDataAddress(void *p)
+{
+	void *tmp = NULL;
+	tmp = ((llelement*)p + sizeof(llelement*));
+	return tmp;
+}
+
+/**
+ *	Inserts a llelement struct into the linked list.
+ *
+ *	Parameters
+ *		const char *llelementName
+ *			A char array that contains the llelementname we want to insert
+ *		llelement **head
  *			This is the value of the current location of the head of the linked list
- *		file **tail
+ *		llelement **tail
  *			This is the value of the current location of the tail of the linked list
  *
  *	Returns
  *		0 on successful insertion
  */
-int InsertIntoList(const char *fileName, file **head, file **tail)
+int InsertIntoList(llelement *toInsert, llelement **head, llelement **tail)
 {
-	file *newFile = NULL;
-	file *previousFile = NULL;
-	file *nextFile = NULL;
+	llelement *previousllelement = NULL;
+	llelement *nextllelement = NULL;
 
-	newFile = (file *)malloc(sizeof(file)); /* Get some memory for the struct we are going to insert */
+	toInsert->next = toInsert->prev = NULL; /* Set the next and prev to null for the new llelement because we don't yet know what is prev and what is next */
 
-	newFile->next = newFile->prev = NULL; /* Set the next and prev to null for the new file because we don't yet know what is prev and what is next */
-
-	if(NULL == newFile)
+	if(NULL == toInsert)
 	{
 		return -1;
 	}
-
-	strcpy_s(newFile->fileName, MAX_BUFFER_SIZE, fileName); /* Copy the filename into the struct we are going to insert */
 
 	/**
 	 *	We are inserting the first item in the list
 	 */
 	if(NULL == *head)
 	{
-		*head = newFile;
-		*tail = newFile;
+		*head = toInsert;
+		*tail = toInsert;
 		return 0;
 	}
 	/**
@@ -45,27 +74,27 @@ int InsertIntoList(const char *fileName, file **head, file **tail)
 	 */
 	else
 	{
-		previousFile = *head;
-		nextFile = previousFile->next;
+		previousllelement = *head;
+		nextllelement = previousllelement->next;
 
 		/**
 		 *	Go to the end of the list
 		 */
-		while(NULL != nextFile)
+		while(NULL != nextllelement)
 		{
-			previousFile = nextFile;
-			nextFile = nextFile->next;
+			previousllelement = nextllelement;
+			nextllelement = nextllelement->next;
 		}
 
 		/**
-		 * We are at the end of the list so add the new file
+		 * We are at the end of the list so add the new llelement
 		 */
-		if(NULL == nextFile)
+		if(NULL == nextllelement)
 		{
-			*tail = newFile;
-			newFile->next = NULL;
-			previousFile->next = newFile;
-			newFile->prev = previousFile;
+			*tail = toInsert;
+			toInsert->next = NULL;
+			previousllelement->next = toInsert;
+			toInsert->prev = previousllelement;
 		}
 	}
 
@@ -76,18 +105,21 @@ int InsertIntoList(const char *fileName, file **head, file **tail)
  *	Prints the contents of the linked list to the console
  *
  *	Parameters
- *		file **head
+ *		llelement **head
  *			This is the value of the current location of the head of the linked list
- *		file **tail
+ *		llelement **tail
  *			This is the value of the current location of the tail of the linked list
  *
  *	Returns
  *		None
  */
-void PrintList(file **head, file **tail)
+void PrintList(llelement **head, llelement **tail)
 {
-	file *previousFile = NULL;
-	file *nextFile = NULL;
+	llelement *previousllelement = NULL;
+	llelement *nextllelement = NULL;
+	void *p;
+	int len = 0;
+	fileData *pFileData = NULL;
 
 	/**
 	 *	Check for empty list
@@ -98,17 +130,19 @@ void PrintList(file **head, file **tail)
 		return;
 	}
 
-	previousFile = *head;
-	nextFile = previousFile->next;
+	previousllelement = *head;
+	nextllelement = previousllelement->next;
 
-	while(NULL != nextFile)
+	while(NULL != nextllelement)
 	{
-		printf("%s\n", previousFile->fileName);
-		previousFile = nextFile;
-		nextFile = nextFile->next;
+		p = GetDataAddress(previousllelement);
+		pFileData = (fileData*)p;
+		printf("%s\n", pFileData->name);
+		previousllelement = nextllelement;
+		nextllelement = nextllelement->next;
 	}
 
-	if(NULL == nextFile)
+	if(NULL == nextllelement)
 	{
 		return;
 	}

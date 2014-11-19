@@ -15,8 +15,8 @@ int main(void)
 	int validatorInt = 0; /* Used to validate return values from various function calls */
 	int exit = 0; /* A flag that indicates if the user wants to exit the program */
 
-	file *head = NULL;
-	file *tail = NULL;
+	llelement *head = NULL;
+	llelement *tail = NULL;
 
 	/**
 	 *	Menu loop
@@ -27,13 +27,14 @@ int main(void)
 		switch(GetNum())
 		{
 			case 1:
-				GetDirectory(buffer); /* Get directory from user */
-				RemoveEOL(buffer); /* Remove EOL character from buffer */
-				if(strcmp("9", buffer) == 0) /* User can exit to main menu with 9 so check for it */
-				{
-					break;
-				}
-				validatorInt = ChangeDirectoryContext(buffer); /* Change the directory context */
+				//GetDirectory(buffer); /* Get directory from user */
+				//RemoveEOL(buffer); /* Remove EOL character from buffer */
+				//if(strcmp("9", buffer) == 0) /* User can exit to main menu with 9 so check for it */
+				//{
+//					break;
+				//}
+				//validatorInt = ChangeDirectoryContext(buffer); /* Change the directory context */
+				validatorInt = ChangeDirectoryContext("C:\\name");
 				if(0 != validatorInt)
 				{
 					printf("Could not find the directory specified.\n");
